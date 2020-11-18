@@ -1,0 +1,12 @@
+# Cluster bootstrapper artifacts to exclude from repository
+bootstrap-cluster/certs/
+bootstrap-cluster/csr/
+bootstrap-cluster/kubeconfigs/
+bootstrap-cluster/log/
+
+# Terraform artifacts to exclude from repository
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+*.tfvars

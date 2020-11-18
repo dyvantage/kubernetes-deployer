@@ -1,0 +1,71 @@
+# initialization
+: "${pkg_name:=cloud-tools}"
+: "${pkg_basedir:=$(dirname ~/${pkg_name}/terraform/aws.ec2-kubernetes-the-hard-way/bootstrap-cluster/.)}"
+: "${pkg_binary:=${pkg_basedir}/${pkg_name}}"
+: "${pkg_cert_dir:=${pkg_basedir}/certs}"
+: "${pkg_kubeconfig_dir:=${pkg_basedir}/kubeconfigs}"
+: "${pkg_tpl_dir:=${pkg_basedir}/tpl}"
+
+# ssh credentials
+service_account_worker="ubuntu"
+service_account_master="ubuntu"
+private_key_worker=${pkg_basedir}/../keys/dyv-aws.pem
+private_key_master=${pkg_basedir}/../keys/dyv-aws.pem
+
+assert() {
+	if [ $# -eq 1 ]; then echo "${1}"; fi
+	exit 1
+}
+
+get_master_nodes() {
+	(cd ${pkg_basedir}/.. && terraform output -json master_private_ips | jq -r 'keys[]')
+}
+
+get_worker_nodes() {
+	(cd ${pkg_basedir}/.. && terraform output -json worker_private_ips | jq -r 'keys[]')
+}
+
+ssh_exec() {
+	if [ $# -ne 4 ]; then return 1; fi
+	local user=${1}
+	local host=${2}
+	local key=${3}
+	local remote_cmd=${4}
+
+	ssh -o LogLevel=ERROR -o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking=no" -i ${key} ${user}@${host} "${remote_cmd}"
+}
+
+scp_exec() {
+	if [ $# -ne 5 ]; then return 1; fi
+	local user=${1}
+	local host=${2}
+	local key=${3}
+	local local_file=${4}
+	local remote_file=${5}
+
+	scp -o LogLevel=ERROR -o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking=no" -i ${key} ${local_file} ${user}@${host}:${remote_file}
+}
+
+scp_sudo() {
+	if [ $# -ne 5 ]; then return 1; fi
+	local user=${1}
+	local host=${2}
+	local key=${3}
+	local local_file=${4}
+	local remote_file=${5}
+
+	# init tmp_path
+	tmp_path="/tmp/$(basename ${local_file})"
+	
+	# copy file to node
+	scp_exec ${user} ${host} ${key} ${local_file} ${tmp_path}
+	copy_status=$(ssh_exec ${user} ${host} ${key} "if [ -r ${tmp_path} ]; then echo '0'; else echo '1'; fi")
+	if [ -n "${copy_status}" -a "copy_status" == "1" ]; then return 1; fi
+
+	# move file into place (and set permissions)
+	remote_cmd="sudo mv ${tmp_path} ${remote_file} ; sudo chown root:root ${remote_file} ; sudo chmod 0400 ${remote_file}"
+	ssh_exec ${user} ${host} ${key} "${remote_cmd}"
+	copy_status=$(ssh_exec ${user} ${host} ${key} "if [ -r ${remote_file} ]; then echo '0'; else echo '1'; fi")
+	if [ -n "${copy_status}" -a "copy_status" == "1" ]; then return 1; fi
+}
+

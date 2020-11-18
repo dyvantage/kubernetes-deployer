@@ -1,9 +1,9 @@
 # Kubernetes Cluster Bootstraper
 This process that is codified in this repo (Terraform & Bash) is based on processes, content, and configurations detailed in Kelsey Hightower's [Kubernetes The Hard Way](https://github.com/kelseyhightower/kubernetes-the-hard-way/).
 
-Kelsey's tutorial uses the Google Cloud SDK to operate against Google Cloud Platform, and he provides a detailed process for bootstrapping a Kubernetes cluster -- from generation of TLS certificates and kubeconfigs for the controller and worker nodes, all the way up to bringing up the control plane (including clustered etcd), configuring CNI, attaching the worker nodes, configuring DNS, and configuring the HTTPS load-balancer for accessing the Kubernetes API.
+Kelsey's tutorial uses the Google Cloud SDK to operate against Google Cloud Platform, and he provides a detailed process for bootstrapping a Kubernetes cluster -- from generation of TLS certificates and kubeconfigs for the controller and worker nodes, all the way to bringing up the control plane (including clustered etcd), configuring CNI, attaching the worker nodes, configuring DNS, and configuring the HTTPS load-balancer for accessing the Kubernetes API.
 
-The code in this repo, named 'kubernetes-deployer', implements Kelsey's process -- but on AWS instead of GCP -- and automates the process using Terraform, and a little Bash.
+The code in this repo implements Kelsey's process -- on AWS instead of GCP -- and automates the entire process using Terraform and Bash.
 
 # Getting Started
 To get started, you'll need an AWS account.  Free Tier is fine, although you might incur a few dollars worth of charges.
@@ -29,12 +29,12 @@ bash scripts/install-jq.sh
 ```
 
 # AWS Prerequisites
-You'll need to create an SSH key-pair named 'kubernetes-deployer' in pem format.  Save the private key in `~/.ssh/kubernetes-deployer.pem`
+Using the AWS Console, create an SSH key-pair named 'kubernetes-deployer' in pem format.  Save the private key in `~/.ssh/kubernetes-deployer.pem`
 
 # Building a Kubernetes Cluster
 Terraform will create a new VPC and limit all operation to that VPC.
 
-When Terraform is invoked, it will provisions all the infrastructure necessary to support a Kubernetes cluster: subnets, security groups, instances, network routes (for Pod networks), load-balancer.It will also invoke a script located in `bootstrap-cluster/INSTALL_CONTROL_PLANE.sh` to bootstrap the Kubernetes control plane and attach the worker nodes.
+When Terraform is invoked, it will provision all the infrastructure necessary to support a Kubernetes cluster: subnets, security groups, instances, network routes (for Pod networks), load-balancer.It will also invoke a script located in `bootstrap-cluster/INSTALL_CONTROL_PLANE.sh` to bootstrap the Kubernetes control plane and attach the worker nodes.
 
 To invoke Terraform, run:
 ```

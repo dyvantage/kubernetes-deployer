@@ -82,5 +82,5 @@ Here is an example of the Bash -> Terraform interface getting the public IP addr
 ```
 #!/bin/bash
 
-public_ip=$(terraform output -json master_public_ips | jq -r ".\"${instance}\"")
+public_ip=$(terraform output -json master_public_ips | jq -r ".controller-0")
 ```

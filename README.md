@@ -64,3 +64,23 @@ The `bootstrap-cluster/INSTALL_CONTROL_PLANE.sh` is a wrapper that calls scripts
 * build_dns.sh
 
 You can review these scripts to see the automation of each step in [Kubernetes The Hard Way](https://github.com/kelseyhightower/kubernetes-the-hard-way/)
+
+# Integration Between Terraform & Bash
+As Terraform executes, it maintains data structures about each AWS resource it creates. To make information about resources available to external programs (such as a Bash script) Terraform output variables are used.  Since Terraform outout variables are represented as JSON, the Bash scripts leverage `jq` (a commandline JSON parser) to consume JSON variables.
+
+To access the Terraform output variables, run `terraform output [<output-variable-name>]`:
+```
+$ terraform output master_public_ips
+{
+  "controller-0" = "52.0.46.9"
+  "controller-1" = "3.81.66.223"
+  "controller-2" = "52.200.168.154"
+}
+```
+
+Here is an example of the Bash -> Terraform interface getting the public IP address for a master node (i.e. controller-0):
+```
+#!/bin/bash
+
+public_ip=$(terraform output -json master_public_ips | jq -r ".\"${instance}\"")
+```

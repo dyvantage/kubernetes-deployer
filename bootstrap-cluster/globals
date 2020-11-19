@@ -9,8 +9,8 @@
 # ssh credentials
 service_account_worker="ubuntu"
 service_account_master="ubuntu"
-private_key_worker=${pkg_basedir}/../keys/dyv-aws.pem
-private_key_master=${pkg_basedir}/../keys/dyv-aws.pem
+private_key_worker=~/.ssh/kubernetes-deployer.pem
+private_key_master=~/.ssh/kubernetes-deployer.pem
 
 assert() {
 	if [ $# -eq 1 ]; then echo "${1}"; fi

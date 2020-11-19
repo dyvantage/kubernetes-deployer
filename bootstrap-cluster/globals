@@ -1,6 +1,6 @@
 # initialization
-: "${pkg_name:=cloud-tools}"
-: "${pkg_basedir:=$(dirname ~/${pkg_name}/terraform/aws.ec2-kubernetes-the-hard-way/bootstrap-cluster/.)}"
+: "${pkg_name:=kubernetes-deployer}"
+: "${pkg_basedir:=$(dirname ~/${pkg_name}/bootstrap-cluster/.)}"
 : "${pkg_binary:=${pkg_basedir}/${pkg_name}}"
 : "${pkg_cert_dir:=${pkg_basedir}/certs}"
 : "${pkg_kubeconfig_dir:=${pkg_basedir}/kubeconfigs}"

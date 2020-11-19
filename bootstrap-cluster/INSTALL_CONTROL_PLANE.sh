@@ -25,6 +25,17 @@ while [ $# -gt 0 ]; do
 	shift
 done
 
+# create tmp directories for artifacts
+for i in certs csr kubeconfigs log; do
+	if [ ! -r ${i} ]; then
+		mkdir ${i}
+		if [ $? -ne 0 ]; then
+			echo "ERROR: failed to create directory: ${i}"
+			exit 0
+		fi
+	fi
+done
+
 # timeout loop: wait ${} seconds for Terraform to populate output variable
 sleep 10
 

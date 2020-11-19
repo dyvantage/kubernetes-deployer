@@ -1,4 +1,4 @@
-# Kubernetes Cluster Bootstraper
+# Kubernetes Cluster Deployer (Bootstrapper)
 This process that is codified in this repo (Terraform & Bash) is based on processes, content, and configurations detailed in Kelsey Hightower's [Kubernetes The Hard Way](https://github.com/kelseyhightower/kubernetes-the-hard-way/).
 
 Kelsey's tutorial uses the Google Cloud SDK to operate against Google Cloud Platform, and he provides a detailed process for bootstrapping a Kubernetes cluster -- from generation of TLS certificates and kubeconfigs for the controller and worker nodes, all the way to bringing up the control plane (including clustered etcd), configuring CNI, attaching the worker nodes, configuring DNS, and configuring the HTTPS load-balancer for accessing the Kubernetes API.

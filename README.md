@@ -31,6 +31,8 @@ bash scripts/install-jq.sh
 # AWS Prerequisites
 Using the AWS Console, create an SSH key-pair named 'kubernetes-deployer' in pem format.  Save the private key in `~/.ssh/kubernetes-deployer.pem`
 
+Review the values in `aws-account.tf`, which includes defaults values to use when interacting with AWS.
+
 # Building a Kubernetes Cluster
 Terraform will create a new VPC and limit all operations to that VPC. When Terraform is invoked, it will provision all infrastructure necessary to support a Kubernetes cluster, including subnets, security groups, instances, network routes (for Pod networks), and load-balancer.  
 

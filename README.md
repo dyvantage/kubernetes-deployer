@@ -63,4 +63,4 @@ The `bootstrap-cluster/INSTALL_CONTROL_PLANE.sh` is a wrapper that calls scripts
 * build_admin_kubeconfig.sh
 * build_dns.sh
 
-You can review theee scripts to see the auromation of each step in [Kubernetes The Hard Way](https://github.com/kelseyhightower/kubernetes-the-hard-way/)
+You can review these scripts to see the automation of each step in [Kubernetes The Hard Way](https://github.com/kelseyhightower/kubernetes-the-hard-way/)

@@ -7,6 +7,16 @@ usage() {
 	exit 1
 }
 
+# glabal settings
+source globals
+
+# Initialize Logger
+: "${debug_flag:=2}"
+: "${log_file:=${pkg_basedir}/log/${pkg_name}.log}"
+source lib/logger.sh
+init_log_file
+debug "Logger Started: ${log_file}"
+
 # validate commandline
 while [ $# -gt 0 ]; do
 	case ${1} in
@@ -36,9 +46,30 @@ for i in certs csr kubeconfigs log; do
 	fi
 done
 
-# timeout loop: wait ${} seconds for Terraform to populate output variable
-sleep 10
+# timeout loop: wait for Terraform to populate an output variable
+stdout "[Timeout Loop: wait for terraform state update]"
+start_time=$(date +%s)
+elapsed_time=0
+timeout=300
+while [ ${elapsed_time} -lt ${timeout} ]; do
+        stdout "--> polling (${elapsed_time} seconds elapsed)"
+        (cd ${pkg_basedir}/.. && terraform output -json master_private_ips > /dev/null 2>&1)
+        if [ $? -eq 0 ]; then
+                (cd ${pkg_basedir}/.. && terraform output -json worker_private_ips > /dev/null 2>&1)
+                if [ $? -eq 0 ]; then
+                        break
+                fi
+        fi
 
+        # pause before next poll
+        sleep 2
+        current_time=$(date +%s)
+        elapsed_time=$(( current_time - start_time ))
+done
+if [ ${elapsed_time} -ge ${timeout} ]; then assert "TIMEOUT: waiting for terraform output: master_private_ips"; fi
+stdout "Done polling, outputs validated: [master_private_ips,worker_private_ips]"
+
+# run bootstrap scripts
 lib/build_certificates.sh ${flags} && \
 lib/build_encryption.sh ${flags} && \
 lib/build_kubeconfigs.sh ${flags} && \

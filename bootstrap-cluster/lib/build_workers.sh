@@ -180,6 +180,6 @@ sleep 10
 remote_cmd="kubectl get nodes --kubeconfig admin.kubeconfig"
 debug "remote_cmd = ${remote_cmd}"
 debug "ssh_exec ${service_account_master} ${master_lb_ip} ${private_key_master}"
-ssh_exec ${service_account_master} ${master_lb_ip} ${private_key_master} "${remote_cmd}" | debug
+ssh_exec ${service_account_master} ${master_lb_ip} ${private_key_master} "${remote_cmd}" | stdout
 
 exit 0

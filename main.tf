@@ -84,7 +84,7 @@ module "create_alb" {
   alb_metadata = var.alb_metadata
   aws_metadata = var.aws_metadata
 
-  depends_on = [module.create_masters, module.create_workers]
+  depends_on = [null_resource.bootstrap_controlplane]
 }
 
 module "create_alb_attachments" {
@@ -95,6 +95,6 @@ module "create_alb_attachments" {
   nodeapp_instance_ids = module.create_masters.master_instance_ids
   nodeapp_target_group_arn = module.create_alb.master_target_group_arn
 
-  # before creating the load-balancer, wait for control plane -- an artificact of which is the TLS nert needed for the HTTPS load-balancer
-  #depends_on = [null_resource.bootstrap_controlplane]
+  # before creating the load-balancer, wait for control plane -- an artificact of which is the TLS cert needed for the HTTPS load-balancer
+  depends_on = [module.create_alb]
 }

@@ -28,7 +28,8 @@ variable "alb_metadata" {
   type    = map(string)
   default = {
     "port" = "6443"
-    "protocol" = "HTTP"
+    "protocol" = "HTTPS"
+    "cert_private_key" = "bootstrap-cluster/certs/kubernetes-key.pem"
+    "cert_body" = "bootstrap-cluster/certs/kubernetes.pem"
   }
 }
-

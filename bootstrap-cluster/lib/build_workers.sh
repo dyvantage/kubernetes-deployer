@@ -17,7 +17,7 @@ source globals
 : "${log_file:=${pkg_basedir}/log/${pkg_name}.log}"
 source lib/logger.sh
 init_log_file
-debug "Logger Started: ${log_file}"
+debug "Sub-Logger Started: $(basename $0)"
 
 # validate commandline
 while [ $# -gt 0 ]; do

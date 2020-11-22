@@ -18,6 +18,18 @@ resource "aws_alb_listener" "alb_front_http" {
   }
 }
 
+# import certificate
+resource "aws_acm_certificate" "k8s_master_cert" {
+  private_key      = file(lookup(var.alb_metadata,"cert_private_key"))
+  certificate_body = file(lookup(var.alb_metadata,"cert_body"))
+}
+
+# add TLS cert (for Kubernete master nodes)
+resource "aws_alb_listener_certificate" "k8s_master_api" {
+  listener_arn    = aws_alb_listener.alb_front_http.arn
+  certificate_arn = aws_acm_certificate.k8s_master_cert.arn
+}
+
 # create target group
 resource "aws_alb_target_group" "alb_front_http" {
   name     = "alb-front-http"

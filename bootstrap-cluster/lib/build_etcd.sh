@@ -122,6 +122,7 @@ remote_cmd="sudo ETCDCTL_API=3 etcdctl member list \
   --cacert=/etc/etcd/ca.pem \
   --cert=/etc/etcd/kubernetes.pem \
   --key=/etc/etcd/kubernetes-key.pem"
-ssh_exec ${service_account_master} ${master_lb_ip} ${private_key_master} "${remote_cmd}" | stdout
+ssh_output=$(ssh_exec ${service_account_master} ${master_lb_ip} ${private_key_master} "${remote_cmd}")
+stdout ${ssh_output}
 
 exit 0

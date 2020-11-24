@@ -40,6 +40,7 @@ done
 # install CoreOS DNS add-on
 stdout "[Installing Core-DNS Add-On]"
 debug "kubectl apply -f https://storage.googleapis.com/kubernetes-the-hard-way/coredns-1.7.0.yaml"
-kubectl apply -f https://storage.googleapis.com/kubernetes-the-hard-way/coredns-1.7.0.yaml | stdout
+ssh_output=$(kubectl apply -f https://storage.googleapis.com/kubernetes-the-hard-way/coredns-1.7.0.yaml)
+stdout ${ssh_output}
 
 exit 0

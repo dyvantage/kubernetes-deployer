@@ -44,19 +44,6 @@ module "create_workers" {
   instance_security_groups = module.create_sgs.sg_ids
 }
 
-# create route table entries for pods
-#  value = {
-#    for instance in aws_instance.k8worker:
-#    lookup(instance.tags,"Name") => lookup(instance.tags,"Pod_CIDR")
-#  }
-#
-#resource "aws_route" "pod_route_entry" {
-#  route_table_id              = module.vpc.default_route_table_id
-#  destination_cidr_block = "10.200.0.0/24"
-#  instance_id = module.create_workers.aws_instance.k8worker[0].id
-#  depends_on = [module.create_workers]
-#}
-
 locals {
   bootstrap_args = module.create_masters.designated_master_public_dns
 }
